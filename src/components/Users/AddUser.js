@@ -1,17 +1,24 @@
-import { useState } from "react";
+import React, { useState, useRef } from "react";
 
 import Card from "../UI/Card";
 import Button from "../UI/Button";
 import classes from "./AddUser.module.css";
 import ErrorModal from "../UI/ErrorModal";
 
+// Controlled Component: React Control those component through the "internal state" (We don't access the DOM through the API).
+
 function AddUser(props) {
-  const [addUsername, setAddUsername] = useState("");
-  const [addAge, setAddAge] = useState("");
+  // Can use either refs or state
+  const usernameInputRef = useRef();
+  const ageInputRef = useRef();
+
   const [error, setError] = useState();
 
   function addUserFormHandler(event) {
     event.preventDefault();
+
+    const addUsername = usernameInputRef.current.value;
+    const addAge = ageInputRef.current.value;
 
     if (addUsername.trim().length === 0 || addAge.trim().length === 0) {
       setError({
@@ -31,16 +38,8 @@ function AddUser(props) {
 
     props.onAddUser(addUsername, addAge);
 
-    setAddUsername("");
-    setAddAge("");
-  }
-
-  function addUsernameHandler(event) {
-    setAddUsername(event.target.value);
-  }
-
-  function addAgeHandler(event) {
-    setAddAge(event.target.value);
+    usernameInputRef.current.value = "";
+    ageInputRef.current.value = "";
   }
 
   function errorHandler() {
@@ -50,7 +49,7 @@ function AddUser(props) {
   // error && <- Check if error is a thing
 
   return (
-    <div>
+    <React.Fragment>
       {error && (
         <ErrorModal
           title={error.title}
@@ -61,17 +60,13 @@ function AddUser(props) {
       <Card className={classes.input}>
         <form onSubmit={addUserFormHandler}>
           <label htmlFor="username">Username</label>
-          <input
-            id="username"
-            onChange={addUsernameHandler}
-            value={addUsername}
-          ></input>
+          <input id="username" ref={usernameInputRef}></input>
           <label htmlFor="age">Age (Years)</label>
-          <input id="age" onChange={addAgeHandler} value={addAge}></input>
+          <input id="age" ref={ageInputRef}></input>
           <Button type="submit">Add User</Button>
         </form>
       </Card>
-    </div>
+    </React.Fragment>
   );
 }
 

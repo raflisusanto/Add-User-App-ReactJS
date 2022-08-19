@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import AddUser from './components/Users/AddUser';
-import UsersList from './components/Users/UsersList';
+import AddUser from "./components/Users/AddUser";
+import UsersList from "./components/Users/UsersList";
 
 const INIT_USER = [];
 
@@ -10,15 +10,18 @@ function App() {
 
   function appendUserHandler(username, userAge) {
     setEnteredUser((prevState) => {
-      return [{ name: username, age: userAge, id: Math.random()}, ...prevState];
-    })
+      return [
+        { name: username, age: userAge, id: Math.random() },
+        ...prevState,
+      ];
+    });
   }
 
   return (
-    <div>
+    <React.Fragment>
       <AddUser onAddUser={appendUserHandler} />
-      <UsersList users={enteredUser}/>
-    </div>
+      <UsersList users={enteredUser} />
+    </React.Fragment>
   );
 }
 
